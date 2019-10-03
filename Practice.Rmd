@@ -1,11 +1,42 @@
 ---
-title: "Practice"
+title: "Balls"
 author: "Margaret Butler"
 date: "10/3/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dbplyr)
+library(janitor)
+library(readxl)
 ```
 
+```{r}
+library(googlesheets4)
+
+cold_call <- function(){
+  sheets_deauth()
+  read_sheet("1LtupNx8yBeJzK6UyGkZ5u-aUAPzU90K9C4r2RTJwWqg") %>%
+    select(Student) %>% 
+    sample_n(1) %>% 
+    pull(Student)
+}
+```
+
+```{r}
+sheets_deauth()
+beady_boys <- read_sheet("1cgP-e6THVfiW5TJ95QhX3jkNxKvc8Sicp9k_BkSRd2I")
+
+beady_boys %>% 
+  filter(!is.na(red)) %>% 
+  mutate(prop = red / (red + white)) %>% 
+  ggplot(aes(x = prop, fill = "red")) +
+  geom_histogram() +
+  labs(
+    title = "Percentage Red Beads in Sample Size of 25",
+    x = "Proportion of Red Beads",
+    y = "Count")
+  
+```
